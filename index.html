@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد كلمات المرور</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            background-color: #1b1b1b;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+        }
+
+        .tiny-dropdown {
+            width: 50px;
+        }
+
+        .tiny-input {
+            font-size: 15px;
+            border: 1px solid #000;
+            width: 20px;
+            padding: 2px;
+        }
+
+        .tiny-textbox {
+            width: 20px;
+            font-size: 15px;
+            border: 1px solid #000;
+            padding: 2px;
+        }
+
+        .tiny-button {
+            font-size: 15px;
+            border: 1px solid #000;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .tiny-button:hover {
+            background-color: #ccc;
+        }
+
+        #passwordsOutput {
+            margin-top: 20px;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 200px;
+            border-top: 2px solid #fff;
+            padding-top: 10px;
+        }
+
+        .password {
+            color: #fff;
+            text-decoration: underline;
+            margin: 5px;
+            display: inline-block;
+        }
+        #allowedCharacters {
+            width: 80px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #565656;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <label for="selectAllCharacters">تحديد الكل:</label>
+        <input type="checkbox" id="selectAllCharacters" onchange="toggleSelectAll()">
+        <br><br>
+        <label for="allowedCharacters">الأحرف المسموح بها:</label>
+        <select id="allowedCharacters" name="allowedCharacters" multiple>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="0">0</option>
+            <option value="a">a</option>
+            <option value="b">b</option>
+            <option value="c">c</option>
+            <option value="d">d</option>
+            <option value="e">e</option>
+            <option value="f">f</option>
+            <option value="g">g</option>
+            <option value="h">h</option>
+            <option value="i">i</option>
+            <option value="j">j</option>
+            <option value="k">k</option>
+            <option value="l">l</option>
+            <option value="m">m</option>
+            <option value="n">n</option>
+            <option value="o">o</option>
+            <option value="p">p</option>
+            <option value="q">q</option>
+            <option value="r">r</option>
+            <option value="s">s</option>
+            <option value="t">t</option>
+            <option value="u">u</option>
+            <option value="v">v</option>
+            <option value="w">w</option>
+            <option value="x">x</option>
+            <option value="y">y</option>
+            <option value="z">z</option>
+            <option value="@">@</option>
+            <option value="#">#</option>
+            <option value="$">$</option>
+            <option value="&">&</option>
+            <option value="_">_</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value=".">.</option>
+            <option value="%">%</option>
+            <option value="~">~</option>
+            <option value="?">?</option>
+            <option value="!">!</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="H">H</option>
+            <option value="I">I</option>
+            <option value="J">J</option>
+            <option value="K">K</option>
+            <option value="L">L</option>
+            <option value="M">M</option>
+            <option value="N">N</option>
+            <option value="O">O</option>
+            <option value="P">P</option>
+            <option value="Q">Q</option>
+            <option value="R">R</option>
+            <option value="S">S</option>
+            <option value="T">T</option>
+            <option value="U">U</option>
+            <option value="V">V</option>
+            <option value="W">W</option>
+            <option value="X">X</option>
+            <option value="Y">Y</option>
+            <option value="Z">Z</option>
+        </select>
+        <button onclick="addCustomCharacter()" class="tiny-button">إضافة حرف مخصص</button>
+        <br><br>
+        <label for="passwordLength">طول كلمة المرور:</label>
+        <button onclick="decreaseLength()" class="tiny-button">-</button>
+        <input type="number" id="passwordLength" min="1" value="8" class="tiny-input">
+        <button onclick="increaseLength()" class="tiny-button">+</button>
+        <br><br>
+        <label for="numberOfPasswords">عدد كلمات المرور:</label>
+        <button onclick="decreaseCount()" class="tiny-button">-</button>
+        <input type="number" id="numberOfPasswords" min="1" value="1" class="tiny-textbox">
+        <button onclick="increaseCount()" class="tiny-button">+</button>
+        <br><br>
+        <button onclick="generatePassword()" class="tiny-button">إنشاء كلمة المرور</button>
+        <br><br>
+        <button onclick="copyPasswords()" class="tiny-button">نسخ</button>
+        <button onclick="savePasswords()" class="tiny-button">حفظ</button>
+        <button onclick="resetFields()" class="tiny-button">إعادة تعيين</button>
+        <br><br>
+        <div id="passwordsOutput"></div>
+    </div>
+<div class="footer">
+    تم صنع الصفحة من قبل <a href="https://coderinventor.github.io/social/" style="color: #ff0000; text-decoration: none;">coder inventor</a>
+    <script>
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAllCharacters');
+            const options = document.getElementById('allowedCharacters').options;
+            for (let i = 0; i < options.length; i++) {
+                options[i].selected = selectAllCheckbox.checked;
+            }
+        }
+
+        function addCustomCharacter() {
+            const newCharacter = prompt("الرجاء إدخال الحرف المخصص:");
+            if (newCharacter !== null && newCharacter !== "") {
+                const selectElement = document.getElementById('allowedCharacters');
+                const option = document.createElement("option");
+                option.text = newCharacter;
+                option.value = newCharacter;
+                selectElement.add(option);
+            }
+        }
+
+        function decreaseLength() {
+            const lengthInput = document.getElementById('passwordLength');
+            if (parseInt(lengthInput.value) > 1) {
+                lengthInput.value = parseInt(lengthInput.value) - 1;
+            }
+        }
+
+        function increaseLength() {
+            const lengthInput = document.getElementById('passwordLength');
+            lengthInput.value = parseInt(lengthInput.value) + 1;
+        }
+
+        function decreaseCount() {
+            const countInput = document.getElementById('numberOfPasswords');
+            if (parseInt(countInput.value) > 1) {
+                countInput.value = parseInt(countInput.value) - 1;
+            }
+        }
+
+        function increaseCount() {
+            const countInput = document.getElementById('numberOfPasswords');
+            countInput.value = parseInt(countInput.value) + 1;
+        }
+
+        function generatePassword() {
+            const allowedCharactersElement = document.getElementById('allowedCharacters');
+            const selectedOptions = Array.from(allowedCharactersElement.selectedOptions, option => option.value);
+            let allowedCharacters = selectedOptions.join('');
+            const passwordLength = parseInt(document.getElementById('passwordLength').value);
+            const numberOfPasswords = parseInt(document.getElementById('numberOfPasswords').value);
+            let passwords = [];
+            
+            for (let i = 0; i < numberOfPasswords; i++) {
+                let password = '';
+                for (let j = 0; j < passwordLength; j++) {
+                    const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
+                    password += allowedCharacters.charAt(randomIndex);
+                }
+                passwords.push(password);
+            }
+
+            const passwordsOutput = document.getElementById('passwordsOutput');
+            passwordsOutput.innerHTML = '';
+            passwords.forEach(password => {
+                const passwordElement = document.createElement('div');
+                passwordElement.className = 'password';
+                passwordElement.textContent = password;
+                passwordsOutput.appendChild(passwordElement);
+            });
+        }
+
+        function copyPasswords() {
+            const passwords = Array.from(document.querySelectorAll('.password')).map(element => element.textContent).join('\n');
+            const textarea = document.createElement('textarea');
+            textarea.value = passwords;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert("تم نسخ كلمات المرور إلى الحافظة!");
+        }
+
+        function savePasswords() {
+            const passwords = Array.from(document.querySelectorAll('.password')).map(element => element.textContent).join('\n');
+            const filename = prompt("الرجاء إدخال اسم الملف:", "passwords.txt");
+            if (filename !== null && filename !== "") {
+                const blob = new Blob([passwords], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        function resetFields() {
+            document.getElementById('selectAllCharacters').checked = false;
+            document.getElementById('allowedCharacters').selectedIndex = -1;
+            document.getElementById('passwordLength').value = 8;
+            document.getElementById('numberOfPasswords').value = 1;
+            document.getElementById('passwordsOutput').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
